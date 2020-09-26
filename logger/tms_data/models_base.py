@@ -17,14 +17,16 @@ class MeasurementBase(object):
 
     @classmethod
     def create_series(cls, session):
-        mock_point = {'measurement': cls.__measurement__,
-                      'tags': {tag: '' for tag in cls.__tags__},
-                      'fields': {field: cls.__fields_type__(0) for field in cls.__fields__}}
+        mock_point = {
+            'measurement': cls.__measurement__,
+            'tags': {cls.__tag_name__: ''},
+            'fields': {cls.__field_name__: cls.__field_type__(0)}
+        }
         session.write_points([mock_point])
 
     @classmethod
-    def get_field_names(cls):
-        return cls.__fields__
+    def get_field_name(cls):
+        return cls.__field_name__
 
     @classmethod
     def get_tag_values(cls, session, tag):

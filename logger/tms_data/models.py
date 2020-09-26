@@ -6,12 +6,17 @@ __author__ = 'nnedkov'
 
 
 class VistualVariable(MeasurementBase):
-    __measurement__ = 'env_intelligence'
-    __fields__ = ['value']
-    __fields_type__ = int
-    __tags__ = ['variable']
+    __measurement__ = 'vistual'
+    __field_name__ = 'value'
+    __field_type__ = int
+    __tag_name__ = 'variable'
 
     @classmethod
-    def write_point(cls, session, value, tags, start_time, end_time):
-        # TODO: write point to InfluxDB
-        pass
+    def write_point(cls, session, value, tag=None):
+        """Write point to InfluxDB.
+        """
+        point = {
+            'measurement': cls.__measurement__,
+            'tags': {cls.__tag_name__: tag if tag is not None else ''},
+            'fields': {cls.__field_name__: cls.__field_type__(value)}}
+        session.write_points([point])

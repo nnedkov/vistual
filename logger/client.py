@@ -10,28 +10,16 @@ __author__ = 'nnedkov'
 logging.basicConfig(level=logging.DEBUG,
                     format='%(name)s: %(message)s',)
 logger = logging.getLogger('VistualLogger')
-logger.setLevel(logging.INFO)
+logger.setLevel(logging.DEBUG)
 
 
 class VistualLogger(object):
 
     def __init__(self, name, db_host='127.0.0.1', db_port=8086,
                  db_user='influxdb', db_pass='admin', db_name='vistual',
-                 grafana_host='127.0.0.1', grafana_port=3000,
-                 grafana_user='admin', grafana_pass='admin', recreate_db=True):
-        """ Initializes the VistualLogger object.
-
-        :param name:
-        :param db_host:
-        :param db_port:
-        :param db_user:
-        :param db_pass:
-        :param db_name:
-        :param grafana_host:
-        :param grafana_port:
-        :param grafana_user:
-        :param grafana_pass:
-        :param recreate_db:
+                 gf_host='127.0.0.1', gf_port=3000,
+                 gf_user='admin', gf_pass='admin', recreate_db=True):
+        """Initializes the VistualLogger object.
         """
         init_db({'host': db_host,
                  'port': db_port,
@@ -40,12 +28,13 @@ class VistualLogger(object):
                  'database': db_name},
                 recreate_db=recreate_db)
         # TODO: add annotation of intialization in Grafana
-        logger.info(f'View visualization under URL: http://{grafana_host}:{grafana_port}')
+        logger.info(f'View dashboard under URL: http://{gf_host}:{gf_port}')
 
     def log(self, value, tag=''):
         session = VistualDB.get_session()
-        # TODO: write point to VistualDB
+        logger.debug(f'Writing value `{value}` with tag `{tag}`')
+        VistualVariable.write_point(session, value, tag=tag)
 
-    def annotate(self, annotation_message):
+    def annotate(self, annotation_msg):
         # TODO: write annotation message to Grafana
-        pass
+        logger.debug(f'Writing annotation `{annotation_msg}`')
