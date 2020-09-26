@@ -1,0 +1,52 @@
+version: '3.8'
+ 
+services:
+
+  # Define an InfluxDB service
+  influxdb:
+    image: influxdb:1.7.10
+    restart: always
+    environment:
+      - INFLUXDB_ADMIN_USER=influxdb
+      - INFLUXDB_ADMIN_PASSWORD=admin
+      - INFLUXDB_DATABASE=vistual
+      - INFLUXDB_HTTP_AUTH_ENABLED=true
+    networks:
+      - vistual
+    ports:
+      - 8086:8086
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sI influxdb:8086/ping | grep -q '204 No Content'"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    #volumes:
+    # - /data/cloud-storage/influxdb:/var/lib/influxdb:rw
+    # - ../conf/influxdb/influxdb.conf:/etc/influxdb/influxdb.conf:ro
+
+  # Define a Grafana service
+  grafana:
+    image: grafana/grafana:7.2.0
+    restart: always
+    environment:
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_PANELS_DISABLE_SANITIZE_HTML=true
+    networks:
+      - vistual
+    ports:
+      - 3000:3000
+    healthcheck:
+      test: ["CMD-SHELL", "wget -S --spider grafana:3000/api/health 2>&1 | grep -q '200 OK'"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    depends_on:
+      - influxdb
+    links:
+      - influxdb
+    #volumes:
+    # - /data/cloud-storage/grafana:/var/lib/grafana:rw
+    # - ../conf/grafana.ini:/etc/grafana/grafana.ini
+
+networks:
+  vistual:
