@@ -3,6 +3,7 @@
 
 from logger.client import VistualLogger
 from random import randint
+from time import sleep
 
 __author__ = 'nnedkov'
 
@@ -14,5 +15,6 @@ if __name__ == '__main__':
     for _ in range(10):
         value = randint(0, 10)
         v_logger.log(value)
+        sleep(1)
 
     v_logger.annotate('Shutdown...')

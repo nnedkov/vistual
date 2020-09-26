@@ -9,7 +9,7 @@ services:
     environment:
       - INFLUXDB_ADMIN_USER=influxdb
       - INFLUXDB_ADMIN_PASSWORD=admin
-      - INFLUXDB_DATABASE=vistual
+      - INFLUXDB_DB=vistual
       - INFLUXDB_HTTP_AUTH_ENABLED=true
     networks:
       - vistual
@@ -44,9 +44,10 @@ services:
       - influxdb
     links:
       - influxdb
-    #volumes:
-    # - /data/cloud-storage/grafana:/var/lib/grafana:rw
-    # - ../conf/grafana.ini:/etc/grafana/grafana.ini
+    volumes:
+      - './conf/grafana/provisioning:/etc/grafana/provisioning'
+    # - './conf/grafana/dashboards/dynamic:/usr/share/grafana/public/dashboards'
+    # - './conf/grafana/dashboards/home.json:/usr/share/grafana/public/dashboards/home.json'
 
 networks:
   vistual:
