@@ -46,7 +46,8 @@ services:
       - influxdb
     volumes:
       - './conf/grafana/provisioning:/etc/grafana/provisioning'
-    # - './conf/grafana/dashboards/dynamic:/usr/share/grafana/public/dashboards'
+      - './conf/grafana/dashboards/dynamic/vistual.js:/usr/share/grafana/public/dashboards/vistual.js'
+      - './conf/grafana/dashboards/static:/var/lib/grafana/dashboards'
     # - './conf/grafana/dashboards/home.json:/usr/share/grafana/public/dashboards/home.json'
 
 networks:
